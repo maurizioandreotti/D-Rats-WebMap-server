@@ -15,4 +15,18 @@ to use this module:
 - open d-rats starting from version 0.3.4alfa2 and configure
 
 
+REQUIREMENTS
+WebMap extension it is an "alfa" software. almost no debughas been done and there is no assurance that it will work on your pc as it does on mine.
+
+
+In order to work the WebMap requires:
+
+- python 2.7 and some libraries
+
+- to be launched from the source code via the ".bat" file.
+
+If there is interest (and support) in this work, i can see to provide an installer or a precompiled version
+
+
+
 

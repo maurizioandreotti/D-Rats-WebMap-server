@@ -49,6 +49,16 @@ class FixServer(Thread):
          print " Mapserver: FixServer: Starting gpsfix generator server for testing purposes..."
          loop_fix()
 
+
+#
+###
+######
+##########
+##############
+
+# Queste funzioni sono da mettere poi nel d-rats per chiamare il server in ascolto 
+# e passare le posizioni
+
 class LatLng:
    # this class formats the gps fix
    def __init__(self, lat, lng):
@@ -58,14 +68,7 @@ class LatLng:
       return "Lat: %f, Lng: %f" % (self.lat, self.lng) 
 
 
-#
-###
-######
-##########
-##############
 
-# Questa funzione e' quella da mettere poi nel d-rats per chiamare il server in ascolto 
-# e passare le posizioni
 
 def callback_gps(lat, lng, station="", comments=""):
    # this class broadcasts the gps fixes to the web browsers
