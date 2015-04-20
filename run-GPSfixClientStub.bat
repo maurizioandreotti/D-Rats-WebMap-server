@@ -1,0 +1,2 @@
+python GPSfixClientStub.py 
+pause

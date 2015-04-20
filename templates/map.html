@@ -58,7 +58,7 @@
         var initLatLng = new google.maps.LatLng({{ lat }}, {{ lng }});
         var mapOptions = {
           center: initLatLng,
-          zoom: 8,
+          zoom: 14,
           mapTypeId: google.maps.MapTypeId.TERRAIN
           };
         map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
@@ -69,10 +69,9 @@
        // map_overlay.setMap(map);
 
 
-
-           //   marker = new google.maps.Marker({
+       //   marker = new google.maps.Marker({
        //   title: "the sweeping sweep!"
-        //});
+       //});
       }
       function updateMarker(data) {
         // parse data and create a new LatLng object
