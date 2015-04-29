@@ -12,7 +12,7 @@ to use this module:
         - 5011 for listening gps calls from d-rats
       (you can modify the ports directly from the batch file) 
 - open a web page on http://localhost:5010 to see the map
-- open d-rats starting from version 0.3.4alfa2 and configure
+- open d-rats starting from version 0.3.4alfa2 and configure in GPS Settings to send positions to map server on port 5011
 
 
 REQUIREMENTS

@@ -61,21 +61,25 @@ from thread import *
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket for listening gps fixes created'
-       
+
             
 ############ http Mapserver ##################
 #--- parameters to feed into flask app ---
 #
-# htmlpagename: the html page to send to the internet browsers clients
-# the htmlpagename must be into the "templates" folder
-htmlpagename = "map.html"
 # lat, lng: set the initial coordinated where the map mage gets located at startup
 initlat = 45.85417259484529 # FIXME: THIS SHOULD BE PASSED WHEN INVOKING THE HTTP SERVER
 initlng = 9.388961847871542 # FIXME: THIS SHOULD BE PASSED WHEN INVOKING THE HTTP SERVER
 
 
+# htmlpagename: the html page to send to the internet browsers clients
+# the htmlpagename must be into the "templates" folder
+htmlpagename = "map.html"
+
+
 ################################################
-#Listening server function for handling connections. This will be used to create threads
+# Listening server function for handling connections.
+# this will be used to create threads
+
 def clientthread(conn):
     #Sending message to connected client
      
@@ -122,7 +126,6 @@ class ListenServer(Thread):
         super(ListenServer, self).__init__()
         
     def run(self):
-     ## if __name__ == "__main__":
         print " Mapserver: ListenServer: Starting "
         
         #now keep talking with the client
@@ -130,7 +133,7 @@ class ListenServer(Thread):
             #wait to accept a connection - blocking call
             conn, addr = s.accept()
             print 'Connected with ' + addr[0] + ':' + str(addr[1])
-             
+            
             #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
             start_new_thread(clientthread ,(conn,))
          
@@ -139,25 +142,26 @@ class ListenServer(Thread):
 ##########################
 
 app = Flask(__name__)
+app.debug = True
 
 @app.route("/")
 def map(lat=initlat, lng=initlng):
-  return render_template(htmlpagename, lat=lat, lng=lng)
+    return render_template(htmlpagename, lat=lat, lng=lng)
 
 @app.route("/status")
 def mapstatus():
-  htmlreply = """
-  <html><head><title>D-Rats WebMap server extender</title></head>
-  <body><h1>D-Rats WebMap server extender</h1>
-   <ul>
-   <li>Application name: %s</li>
-   <li>Version %s</li>
-   <li>Description  %s</li>
-   <li>Authors: %s</li>
-   </ul>
-   </body></html>
-  """ % (VERSION, NAME, LONG_DESCRIPTION, AUTHORS )
-  return htmlreply
+    htmlreply = """
+    <html><head><title>D-Rats WebMap server extender</title></head>
+    <body><h1>D-Rats WebMap server extender</h1>
+     <ul>
+     <li>Application name: %s</li>
+     <li>Version %s</li>
+     <li>Description  %s</li>
+     <li>Authors: %s</li>
+     </ul>
+     </body></html>
+    """ % (VERSION, NAME, LONG_DESCRIPTION, AUTHORS )
+    return htmlreply
 
 
 @app.route("/socket.io/<path:rest>")
@@ -201,11 +205,10 @@ class MapServer(Thread):
     def run(self):
         print "Mapserver: Starting http map server on port: ", self.port
         SocketIOServer(('0.0.0.0', self.port), app, resource="socket.io").serve_forever()
-        #SocketIOServer(('', self.port), app, resource="socket.io").serve_forever()
         time.sleep(0.25)
         
 ###############################################################################
-if __name__ == "__main__":
+if __name__ == "__main__":   
     print "Mapserver: processing __main__ section "
     
 
@@ -215,22 +218,27 @@ if __name__ == "__main__":
     
     (options, args) = parser.parse_args()
     
-    # listeningserverport: TCP port where to listen the gps fixes
+    # defines listeningserverport: TCP port where to listen the gps fixes
     listeningserverport = options.inputPort
-    print "listenings erver: port:", listeningserverport
+    print "listening server: port:", listeningserverport
     
     
-    # mapserverport: TCP port where to put the mapserver
+    # defines mapserverport: TCP port where to put the mapserver
     mapserverport = options.outputPort
     print "Mapserver: port:", mapserverport
 
 
-    #start the map server process - the lat,lng point defines where to point the initial map
+    # create instance for map server instance
+    # lat,lng point defines where to point the initial map
     mapserverrun = MapServer(mapserverport, initlat, initlng) 
     
+    # create the instance for listening
     listenserverrun = ListenServer()
     
+    # start the server output process
     mapserverrun.start()
+
+    # start the server listening process    
     listenserverrun.start()
 
 
