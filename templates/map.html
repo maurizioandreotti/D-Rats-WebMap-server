@@ -6,7 +6,11 @@
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0 }
       #map-canvas { height: 100% }
+      #wrapper { position: relative; }
+      #over_map { position: absolute; top: 24px; right: 6px; z-index: 99; }
     </style>
+
+
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?sensor=true">
     //  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&sensor=SET_TO_TRUE_OR_FALSE">
@@ -65,13 +69,14 @@
        //
        // here it is possible to load a KML track file
        //
-       // var map_overlay = new google.maps.KmlLayer('http://path-to-kmz-file.kmz');
-       // map_overlay.setMap(map);
+        var map_overlay = new google.maps.KmlLayer('http://www.innovationengineering.it/d-rats-support/resegup.kmz');
+        map_overlay.setMap(map);
 
 
        //   marker = new google.maps.Marker({
        //   title: "the sweeping sweep!"
        //});
+       //
       }
       function updateMarker(data) {
         // parse data and create a new LatLng object
@@ -140,5 +145,11 @@
   <body>
     <div id="text"></div>
     <div id="map-canvas"></div>
+    <div id="over_map">
+      <img border=1 src="http://www.innovationengineering.it/d-rats-support/arilecco.jpg" width=101 height=101></img></br>
+      <img border=1 src="http://www.resegup.it/wp-content/uploads/2014/12/logo@2x.png" width=101 ></img>
+    
+    
+    </div>
   </body>
 </html>
