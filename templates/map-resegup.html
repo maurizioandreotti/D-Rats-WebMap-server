@@ -36,26 +36,29 @@
           width: 210px;}
     </style>
     
-    <script type="text/javascript">
-      // this is for the realtime clock 
-      tday=new Array("Dom","Lun","Mar","Mer","Gio","Ven","Sab");
-      tmonth=new Array("Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Sett","Ott","Nov","Dic");
-      
-      function GetClock(){
-        var d=new Date();
-        var nday=d.getDay(),nmonth=d.getMonth(),ndate=d.getDate(),nyear=d.getYear(),nhour=d.getHours(),nmin=d.getMinutes(),nsec=d.getSeconds();
+<script type="text/javascript">
+tday=new Array("Dom","Lun","Mar","Mer","Gio","Ven","Sab");
+tmonth=new Array("Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Sett","Ott","Nov","Dic");
 
-        if(nyear<1000) nyear+=1900;
-        if(nmin<=9) nmin="0"+nmin;
-        
-        document.getElementById('clockbox').innerHTML="<font size=-2>"+tday[nday]+" "+ndate+" "+tmonth[nmonth]+" "+nyear+"</font> <br>"+nhour+":"+nmin+":"+nsec;
-      }
-      
-      window.onload=function(){
-        GetClock();
-        setInterval(GetClock,1000);
-      }
-    </script>
+function GetClock(){
+var d=new Date();
+var nday=d.getDay(),nmonth=d.getMonth(),ndate=d.getDate(),nyear=d.getYear(),nhour=d.getHours(),nmin=d.getMinutes(),ap;
+     if(nhour==0){ap=" AM";nhour=12;}
+else if(nhour<12){ap=" AM";}
+else if(nhour==12){ap=" PM";}
+else if(nhour>12){ap=" PM";nhour-=12;}
+
+if(nyear<1000) nyear+=1900;
+if(nmin<=9) nmin="0"+nmin;
+
+document.getElementById('clockbox').innerHTML="<font size=-2>"+tday[nday]+" "+ndate+" "+tmonth[nmonth]+" "+nyear+"</font> <br>"+nhour+":"+nmin+ap+"";
+}
+
+window.onload=function(){
+GetClock();
+setInterval(GetClock,1000);
+}
+</script>
 
 
     <script type="text/javascript"
@@ -81,6 +84,7 @@
             return false;
         }
 
+
         // Setup the different icons and shadows
         var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
 
@@ -98,15 +102,8 @@
         ]
         var icons_length = icons.length;
 
-
-        var shadow = {
-          anchor: new google.maps.Point(15,33),
-          url: iconURLPrefix + 'msmarker.shadow.png'
-        };
-
-
-
        function initialize() {
+
         var initLatLng = new google.maps.LatLng({{ lat }}, {{ lng }});
         var mapOptions = {
           center: initLatLng,
@@ -115,36 +112,40 @@
           };
         map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
        //
+       // here it is possible to load a KML track file
        //
-       // UNCOMMENT HERE TO LOAD A KML TRACK FILE -- 
-       // NOTE: THE kmZ WILL FORCE A REPOSITION OF THE MAP
+        var map_overlay = new google.maps.KmlLayer('http://www.innovationengineering.it/d-rats-support/resegup.kmz');
+        map_overlay.setMap(map);
+
+
+       //   marker = new google.maps.Marker({
+       //   title: "the sweeping sweep!"
+       //});
        //
-          //     var map_overlay = new google.maps.KmlLayer('http://www.innovationengineering.it/d-rats-support/resegup.kmz');
-          //     map_overlay.setMap(map);
       }
-      
       function updateMarker(data) {
         // parse data and create a new LatLng object
         var point = JSON.parse(data);
-
+        
         // define the color for stations not listed below
         iconid=0;
         
-        if (point.station=="AA") {iconid=1 };
-              
+        if (point.station=="AA") {iconid=2 };
+        if (point.station=="zz001") {iconid=3 };       
         // differentiate icon colors upon station name
         if (point.station=="IQ2LC1") {iconid=1 };
         if (point.station=="IQ2LC2") {iconid=2 };
         if (point.station=="IQ2LC3") {iconid=3 };
         if (point.station=="IQ2LC4") {iconid=4 };
+
+
         marker = new google.maps.Marker({
             position: new google.maps.LatLng(point.lat, point.lng),
             map: map,
             title: point.station,
-            icon : icons[iconid],
-            shadow: shadow
+            icon : icons[iconid]
              });
-      
+
           // markerslist.push(marker);
 
               google.maps.event.addListener(marker, 'click', (function(marker) {
@@ -198,14 +199,14 @@
     </script>
   </head>
   <body>
-    <div id="text" width=300  ></div>
+    <div id="text"></div>
     <div id="map-canvas"></div>
     <div id="over_map">
       <img border=0 src="http://www.innovationengineering.it/d-rats-support/arilecco.jpg" width=101 height=101 align=left ></img>
       <center>Monitoraggio <br>realtime<hr> 
       <div id="clockbox"></div><hr></center>
-    <!-- logo manifestazione -->
-      <img border=0 src="http://static.wixstatic.com/media/9cda5f_b41a1458968b446d9168eaf482851440.jpg" alt="Trofeo Luigi Galbiati 2015 - Monte Barro Running" width="200" >
+      <img border=0 src="http://www.resegup.it/wp-content/uploads/2014/12/logo@2x.png" width=200 ></img>
+     <!-- <img border=0 src="http://static.wixstatic.com/media/9cda5f_b41a1458968b446d9168eaf482851440.jpg" width="200" >-->
     </div>
   </body>
 </html>

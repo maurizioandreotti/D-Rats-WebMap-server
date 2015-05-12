@@ -1,2 +1,0 @@
-python mapserver.py
-pause

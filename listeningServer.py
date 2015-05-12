@@ -62,20 +62,6 @@ from thread import *
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket for listening gps fixes created'
 
-            
-############ http Mapserver ##################
-#--- parameters to feed into flask app ---
-#
-# lat, lng: set the initial coordinated where the map mage gets located at startup
-initlat = 45.85417259484529 # FIXME: THIS SHOULD BE PASSED WHEN INVOKING THE HTTP SERVER
-initlng = 9.388961847871542 # FIXME: THIS SHOULD BE PASSED WHEN INVOKING THE HTTP SERVER
-
-
-# htmlpagename: the html page to send to the internet browsers clients
-# the htmlpagename must be into the "templates" folder
-htmlpagename = "map.html"
-
-
 ################################################
 # Listening server function for handling connections.
 # this will be used to create threads
@@ -126,7 +112,7 @@ class ListenServer(Thread):
         super(ListenServer, self).__init__()
         
     def run(self):
-        print " Mapserver: ListenServer: Starting "
+        print "ListenServer: Starting "
         
         #now keep talking with the client
         while 1:
@@ -144,9 +130,9 @@ class ListenServer(Thread):
 app = Flask(__name__)
 app.debug = True
 
-@app.route("/")
-def map(lat=initlat, lng=initlng):
-    return render_template(htmlpagename, lat=lat, lng=lng)
+#@app.route("/")
+#def map(lat=initlat, lng=initlng):
+    #return render_template(htmlpagename, lat=lat, lng=lng)
 
 @app.route("/status")
 def mapstatus():
@@ -215,21 +201,39 @@ if __name__ == "__main__":
     parser = optparse.OptionParser()
     parser.add_option('-o', '--outputPort', dest='outputPort', help='Port where to put the http map server', default="5010", type=int)
     parser.add_option('-i', '--inputPort', dest='inputPort', help='Port where to receive GPS fix', default="5011", type=int)
-    
+    parser.add_option('-m', '--htmlpagename', dest='htmlpagename', help='html page template to serve to internet clients', default="map.html")
+    parser.add_option('-x', '--lat', dest='initlng', help='initial longitude -- attention: this gets overridden if KMZ file is specified into the map template', default=9.388961847871542, type='float')
+    parser.add_option('-y', '--lng', dest='initlat', help='initial latitude -- attention: this gets overridden if KMZ file is specified into the map template', default=45.85417259484529, type='float')
     (options, args) = parser.parse_args()
     
-    # defines listeningserverport: TCP port where to listen the gps fixes
+    # loads the parameters passed at runtime
+    #
+    #  listeningserverport: TCP port where to listen the gps fixes
     listeningserverport = options.inputPort
-    print "listening server: port:", listeningserverport
+    print "Listening server- port:", listeningserverport
     
-    
-    # defines mapserverport: TCP port where to put the mapserver
+    # mapserverport: TCP port where to put the mapserver
     mapserverport = options.outputPort
-    print "Mapserver: port:", mapserverport
+    print "Mapserver port:", mapserverport
+    
+    # html page template 
+    htmlpagename = options.htmlpagename
+    print "htmlpagename: ", htmlpagename 
 
+    #load initial position 
+    initlat = options.initlat
+    initlng = options.initlng
+    print "initlat: ", initlat 
+    print "initlng: ", initlng 
 
-    # create instance for map server instance
+    
+    # create instance for map server 
     # lat,lng point defines where to point the initial map
+    @app.route("/")
+    def map(lat=initlat, lng=initlng):
+        print "position:", lat, " - ", lng
+        return render_template(htmlpagename, lat=initlat, lng=initlng)   
+    
     mapserverrun = MapServer(mapserverport, initlat, initlng) 
     
     # create the instance for listening
