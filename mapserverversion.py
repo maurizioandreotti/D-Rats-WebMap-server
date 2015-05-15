@@ -14,6 +14,7 @@ AUTHORS =  "Maurizio Andreotti IZ2LXI"
 AUTHORS_EMAIL= "Maurizio Andreotti <iz2lxi@yahoo.it>"
 COPYRIGHT ="Copyright 2014 Maurizio Andreotti (IZ2LXI) "
 LICENCE ="You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>."
+WEBSITE="http://iz2lxi.jimdo.it"
 
 		
 if __name__ == "__main__":

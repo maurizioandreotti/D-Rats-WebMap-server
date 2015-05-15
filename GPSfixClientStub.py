@@ -31,13 +31,14 @@ import optparse
 import time
 from threading import Thread
 import socket   #for sockets
-
+from time import gmtime, strftime
 
 initlat = 45.85417259484529 # FIXME: THIS SHOULD BE PASSED WHEN INVOKING THE HTTP SERVER
 initlng = 9.388961847871542 # FIXME: THIS SHOULD BE PASSED WHEN INVOKING THE HTTP SERVER
 
 #paramters of the server to call
 host = "localhost" 
+#host="192.168.123.100"
 port= 5011
 
 class FixServer(Thread):
@@ -78,7 +79,7 @@ def callback_gps(lat, lng, station="", comments=""):
    print 'Preparing gpsfix: ', point, station, comments
    
    # Prepare string to broadcast to internet browsers clients
-   message = '{ "lat": "%f", "lng": "%f", "station": "%s", "comments": "%s" }' % (point.lat, point.lng, station, comments)
+   message = '{ "lat": "%f", "lng": "%f", "station": "%s", "comments": "%s","timestamp": "%s" }' % (point.lat, point.lng, station, comments, strftime("%Y-%m-%d %H:%M:%S", gmtime()))
  
    try:
       #create an AF_INET, STREAM socket (TCP)

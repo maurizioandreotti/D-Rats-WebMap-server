@@ -1,0 +1,27 @@
+
+
+to use this extension:
+
+ 1)  uncompress the folder and BEFORE executing the d-Rats, 
+
+2) launch 
+
+	run-Listening-Server.bat
+	
+
+this will start the listening server on 
+	port 5011 (to receive GPS positions) 
+	and port 5010 (to push positions and map directive to the internet clients)
+
+
+3) open a web browser to http://localhost:5010
+
+
+
+4) launch d-Rats 0.3.4, go to "preferences/GPS"
+ and activate the "Map Server" option 
+
+
+5) restart d-rats
+
+and in a while you will see positions of stations appering onto the map...

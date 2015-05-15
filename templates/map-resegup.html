@@ -130,7 +130,7 @@ setInterval(GetClock,1000);
         // define the color for stations not listed below
         iconid=0;
         
-        if (point.station=="AA") {iconid=2 };
+        if (point.station=="AA") {iconid=4 };
         if (point.station=="zz001") {iconid=3 };       
         // differentiate icon colors upon station name
         if (point.station=="IQ2LC1") {iconid=1 };
@@ -142,7 +142,7 @@ setInterval(GetClock,1000);
         marker = new google.maps.Marker({
             position: new google.maps.LatLng(point.lat, point.lng),
             map: map,
-            title: point.station,
+            title: point.station+" -- "+point.timestamp,
             icon : icons[iconid]
              });
 

@@ -140,7 +140,7 @@
         marker = new google.maps.Marker({
             position: new google.maps.LatLng(point.lat, point.lng),
             map: map,
-            title: point.station,
+            title: point.station+" -- "+point.timestamp,
             icon : icons[iconid],
             shadow: shadow
              });
