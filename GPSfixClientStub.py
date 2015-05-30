@@ -38,7 +38,7 @@ initlng = 9.388961847871542 # FIXME: THIS SHOULD BE PASSED WHEN INVOKING THE HTT
 
 #paramters of the server to call
 host = "localhost" 
-#host="192.168.123.100"
+#host="192.168.0.11"
 port= 5011
 
 class FixServer(Thread):
@@ -57,8 +57,6 @@ class FixServer(Thread):
 ##########
 ##############
 
-# Queste funzioni sono da mettere poi nel d-rats per chiamare il server in ascolto 
-# e passare le posizioni
 
 class LatLng:
    # this class formats the gps fix
@@ -137,8 +135,7 @@ def loop_fix(lat=initlat, lng=initlng):
          callback_gps(lata, lnga, "AA", comments="maurizio")
       x+=1
       time.sleep(1)
-      #if x > 10:
-         #break
+
 
 
 if __name__ == "__main__":

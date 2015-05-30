@@ -4,8 +4,8 @@ running py2exe
 *** finding dlls needed ***
 *** create binaries ***
 *** byte compile python files ***
-writing byte-compilation script 'c:\users\maurizio\appdata\local\temp\tmphp1dkq.py'
-C:\Python27\python.exe -OO c:\users\maurizio\appdata\local\temp\tmphp1dkq.py
+writing byte-compilation script 'c:\users\maurizio\appdata\local\temp\tmpjmzayt.py'
+C:\Python27\python.exe -OO c:\users\maurizio\appdata\local\temp\tmpjmzayt.py
 skipping byte-compilation of C:\Python27\lib\BaseHTTPServer.py to BaseHTTPServer.pyo
 skipping byte-compilation of C:\Python27\lib\Queue.py to Queue.pyo
 skipping byte-compilation of C:\Python27\lib\SocketServer.py to SocketServer.pyo
@@ -270,20 +270,35 @@ skipping byte-compilation of C:\Python27\lib\site-packages\flask-0.10.1-py2.7.eg
 skipping byte-compilation of C:\Python27\lib\site-packages\flask-0.10.1-py2.7.egg\flask\testing.py to flask\testing.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\flask-0.10.1-py2.7.egg\flask\wrappers.py to flask\wrappers.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\__init__.py to gevent\__init__.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\_threading.py to gevent\_threading.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\backdoor.py to gevent\backdoor.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\baseserver.py to gevent\baseserver.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\coros.py to gevent\coros.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\event.py to gevent\event.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\fileobject.py to gevent\fileobject.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\greenlet.py to gevent\greenlet.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\hub.py to gevent\hub.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\init.py to gevent\init.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\local.py to gevent\local.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\lock.py to gevent\lock.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\monkey.py to gevent\monkey.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\os.py to gevent\os.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\pool.py to gevent\pool.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\pywsgi.py to gevent\pywsgi.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\queue.py to gevent\queue.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\resolver_ares.py to gevent\resolver_ares.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\resolver_thread.py to gevent\resolver_thread.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\select.py to gevent\select.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\server.py to gevent\server.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\socket.py to gevent\socket.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\ssl.py to gevent\ssl.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\subprocess.py to gevent\subprocess.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\thread.py to gevent\thread.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\threadpool.py to gevent\threadpool.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\timeout.py to gevent\timeout.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\util.py to gevent\util.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent\win32util.py to gevent\win32util.pyo
+skipping byte-compilation of C:\Python27\lib\site-packages\gevent\wsgi.py to gevent\wsgi.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent_socketio-0.3.6-py2.7.egg\socketio\__init__.py to socketio\__init__.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent_socketio-0.3.6-py2.7.egg\socketio\defaultjson.py to socketio\defaultjson.pyo
 skipping byte-compilation of C:\Python27\lib\site-packages\gevent_socketio-0.3.6-py2.7.egg\socketio\handler.py to socketio\handler.pyo
@@ -408,11 +423,10 @@ skipping byte-compilation of C:\Python27\lib\xml\__init__.py to xml\__init__.pyo
 skipping byte-compilation of C:\Python27\lib\xml\parsers\__init__.py to xml\parsers\__init__.pyo
 skipping byte-compilation of C:\Python27\lib\xml\parsers\expat.py to xml\parsers\expat.pyo
 skipping byte-compilation of C:\Python27\lib\zipfile.py to zipfile.pyo
-byte-compiling D:\git\D-Rats-WebMap-server\mapserverversion.py to mapserverversion.pyo
-removing c:\users\maurizio\appdata\local\temp\tmphp1dkq.py
+skipping byte-compilation of D:\git\D-Rats-WebMap-server\mapserverversion.py to mapserverversion.pyo
+removing c:\users\maurizio\appdata\local\temp\tmpjmzayt.py
 *** copy extensions ***
 *** copy dlls ***
-copying C:\Windows\system32\API-MS-Win-Core-LocalRegistry-L1-1-0.dll -> D:\git\D-Rats-WebMap-server\build\bdist.win32\winexe\collect-2.7
 copying C:\Python27\lib\site-packages\py2exe\run_w.exe -> D:\git\D-Rats-WebMap-server\dist\listeningserver.exe
 copying C:\Python27\lib\site-packages\py2exe\run_w.exe -> D:\git\D-Rats-WebMap-server\dist\GPSfixClientStub.exe
 Adding python27.dll to D:\git\D-Rats-WebMap-server\dist\library.zip

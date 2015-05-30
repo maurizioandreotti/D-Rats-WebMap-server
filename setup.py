@@ -26,7 +26,7 @@ def win32_build():
 
     opts = {
         "py2exe" : {
-            "includes" : "sys,optparse,greenlet,gevent,gevent.core,jinja2.*,flask",
+            "includes" : "sys,optparse,greenlet,gevent,gevent.*,gevent.core,jinja2.*,flask",
             "compressed" : 1,
             "optimize" : 2,
             "bundle_files" : 1,
@@ -37,7 +37,7 @@ def win32_build():
     setup(
         windows=[{'script' : "listeningserver.py"},
                  {'script' : 'GPSfixClientStub.py'}],
-        #data_files=["C:\\GTK\\bin\\jpeg62.dll"],
+       # data_files=('run-listeningServer','static'),
         options=opts)
 
 

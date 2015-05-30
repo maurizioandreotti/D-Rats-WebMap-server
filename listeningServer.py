@@ -41,8 +41,8 @@ from mapserverversion import VERSION, NAME, DESCRIPTION, LONG_DESCRIPTION, AUTHO
 
 
 #without these it wont't capture the ctrl-c to quit execution and come back to terminal...
-#from gevent import monkey
-#monkey.patch_all()
+from gevent import monkey
+monkey.patch_all()
 
 from flask import Flask, render_template, Response, request
 import werkzeug.serving
@@ -52,6 +52,17 @@ from socketio.server import SocketIOServer
 
 from threading import Thread
 import time
+
+from time import gmtime, strftime
+
+
+########## Logging
+class log2file(object):
+    def __init__(self, *files):
+        self.files = files
+    def write(self, obj):
+        for f in self.files:
+            f.write(obj)
 
 ####### listening server ###########
 #modules for listening server
@@ -130,6 +141,7 @@ class ListenServer(Thread):
 app = Flask(__name__)
 app.debug = True
 
+#this was here, but I had to move it below to make it load after the htmlpage variable being instanciated with the map
 #@app.route("/")
 #def map(lat=initlat, lng=initlng):
     #return render_template(htmlpagename, lat=lat, lng=lng)
@@ -157,6 +169,8 @@ def stream(rest):
     except:
         app.logger.error("Mapserver: app.route: Exception while handling socketio connection", exc_info=True)
     return Response()
+
+
 
 class StreamNamespace(BaseNamespace):
     sockets = {}
@@ -193,8 +207,19 @@ class MapServer(Thread):
         SocketIOServer(('0.0.0.0', self.port), app, resource="socket.io").serve_forever()
         time.sleep(0.25)
         
+
+       
+
+        
 ###############################################################################
 if __name__ == "__main__":   
+    #Let's start logging
+    f = open('Log'+strftime("%Y-%m-%d-%H-%M-%S", gmtime())+'.txt', 'w')
+    original = sys.stdout
+    sys.stdout = log2file(sys.stdout, f)
+    
+    #from now on all the prints go both on console and on to log file    
+    print strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print "Mapserver: processing __main__ section "
     
 
@@ -245,4 +270,5 @@ if __name__ == "__main__":
     # start the server listening process    
     listenserverrun.start()
 
-
+ #   f.close()    
+        
