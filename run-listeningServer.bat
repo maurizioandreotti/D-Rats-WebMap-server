@@ -23,5 +23,6 @@ rem python listeningServer.py -o 5010 -i 5011 -x 9.375 -y 45.835 -m map.html
 
 
 
-ListeningServer -o 5010 -i 5011 -m map.html
+
+ListeningServer -o 5010 -i 5011 -m map-31maggio.html x 9.375 -y 45.835
 pause
