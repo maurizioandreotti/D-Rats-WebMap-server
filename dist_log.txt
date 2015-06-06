@@ -4,8 +4,8 @@ running py2exe
 *** finding dlls needed ***
 *** create binaries ***
 *** byte compile python files ***
-writing byte-compilation script 'c:\users\maurizio\appdata\local\temp\tmpjmzayt.py'
-C:\Python27\python.exe -OO c:\users\maurizio\appdata\local\temp\tmpjmzayt.py
+writing byte-compilation script 'c:\users\maurizio\appdata\local\temp\tmpczf0wv.py'
+C:\Python27\python.exe -OO c:\users\maurizio\appdata\local\temp\tmpczf0wv.py
 skipping byte-compilation of C:\Python27\lib\BaseHTTPServer.py to BaseHTTPServer.pyo
 skipping byte-compilation of C:\Python27\lib\Queue.py to Queue.pyo
 skipping byte-compilation of C:\Python27\lib\SocketServer.py to SocketServer.pyo
@@ -424,7 +424,7 @@ skipping byte-compilation of C:\Python27\lib\xml\parsers\__init__.py to xml\pars
 skipping byte-compilation of C:\Python27\lib\xml\parsers\expat.py to xml\parsers\expat.pyo
 skipping byte-compilation of C:\Python27\lib\zipfile.py to zipfile.pyo
 skipping byte-compilation of D:\git\D-Rats-WebMap-server\mapserverversion.py to mapserverversion.pyo
-removing c:\users\maurizio\appdata\local\temp\tmpjmzayt.py
+removing c:\users\maurizio\appdata\local\temp\tmpczf0wv.py
 *** copy extensions ***
 *** copy dlls ***
 copying C:\Python27\lib\site-packages\py2exe\run_w.exe -> D:\git\D-Rats-WebMap-server\dist\listeningserver.exe

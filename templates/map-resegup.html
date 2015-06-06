@@ -8,9 +8,10 @@
       #map-canvas { height: 100% }
       #wrapper { position: relative; }
       
-      #text { 
+#text { 
           position: absolute; 
-          top: 200px; 
+          top: 257px; 
+          height: 20px;           
           right: 6px; 
           z-index: 100;
           font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -20,10 +21,23 @@
           border: 0px;
           background-color: white;
           padding: 5px;
-          width: 210px;}    
+          width: 210px;}   
+      #buttons{ 
+          position: absolute; 
+          top: 291px; 
+          right: 6px; 
+          z-index: 100;
+          font-family: Verdana, Arial, Helvetica, sans-serif;
+          font-size: 10px;
+          font-style: normal;
+          color: black;
+          border: 0px;
+          background-color: white;
+          padding: 5px;
+          width: 210px;}   
       #over_map { 
           position: absolute; 
-          top: 24px; 
+          top: 74px; 
           right: 6px; 
           z-index: 99;
           font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -35,46 +49,45 @@
           padding: 5px;
           width: 210px;}
     </style>
-    
-<script type="text/javascript">
-tday=new Array("Dom","Lun","Mar","Mer","Gio","Ven","Sab");
-tmonth=new Array("Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Sett","Ott","Nov","Dic");
-
-function GetClock(){
-var d=new Date();
-var nday=d.getDay(),nmonth=d.getMonth(),ndate=d.getDate(),nyear=d.getYear(),nhour=d.getHours(),nmin=d.getMinutes(),ap;
-     if(nhour==0){ap=" AM";nhour=12;}
-else if(nhour<12){ap=" AM";}
-else if(nhour==12){ap=" PM";}
-else if(nhour>12){ap=" PM";nhour-=12;}
-
-if(nyear<1000) nyear+=1900;
-if(nmin<=9) nmin="0"+nmin;
-
-document.getElementById('clockbox').innerHTML="<font size=-2>"+tday[nday]+" "+ndate+" "+tmonth[nmonth]+" "+nyear+"</font> <br>"+nhour+":"+nmin+ap+"";
-}
-
-window.onload=function(){
-GetClock();
-setInterval(GetClock,1000);
-}
-</script>
-
-
-    <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?sensor=true">
-    //  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&sensor=SET_TO_TRUE_OR_FALSE">
-    </script>
+        
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
     <script type="text/javascript" src="/static/socket.io.js"></script>
+    
     <script type="text/javascript">
+        
+        //define elements for display the watch
+        tday=new Array("Dom","Lun","Mar","Mer","Gio","Ven","Sab");
+        tmonth=new Array("Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Sett","Ott","Nov","Dic");
+        
+        function GetClock(){
+        var d=new Date();
+        var nday=d.getDay(),nmonth=d.getMonth(),ndate=d.getDate(),nyear=d.getYear(),nhour=d.getHours(),nmin=d.getMinutes(),ap;
+             if(nhour==0){ap=" AM";nhour=12;}
+        else if(nhour<12){ap=" AM";}
+        else if(nhour==12){ap=" PM";}
+        else if(nhour>12){ap=" PM";nhour-=12;}
+        
+        if(nyear<1000) nyear+=1900;
+        if(nmin<=9) nmin="0"+nmin;
+        
+        document.getElementById('clockbox').innerHTML="<font size=-2>"+tday[nday]+" "+ndate+" "+tmonth[nmonth]+" "+nyear+"</font> <br>"+nhour+":"+nmin+ap+"";
+        }
+        
+        window.onload=function(){
+        GetClock();
+        setInterval(GetClock,1000);
+        }
+        
+        // elements for the infowindow to display at clicks on markers
+        var iconCounter = 0;
+        var markerslist = new Array();
+        var infowindow = new google.maps.InfoWindow({
+               maxWidth: 160
+        });
 
-       var iconCounter = 0;
-       var markerslist = new Array();
-       var infowindow = new google.maps.InfoWindow({
-              maxWidth: 160
-       });
-
-
+        //variables for query on userclick
+        var elevator;
+        var infowindowUserclick = new google.maps.InfoWindow();
         function arraycontains(a, obj) {
             for (var i = 0; i < a.length; i++) {
                 if (a[i] === obj) {
@@ -102,27 +115,83 @@ setInterval(GetClock,1000);
         ]
         var icons_length = icons.length;
 
+        // this define the different layers to display  the reference KML/KMZ tracks 
+        var layers=[];
+        layers[0] = new google.maps.KmlLayer('http://www.innovationengineering.it/d-rats-support/resegup/resegup.kmz');
+        //  layers[1] = new google.maps.KmlLayer('http://www.innovationengineering.it/d-rats-support/camminataBarro/14km.kmz');
+        //  layers[2] = new google.maps.KmlLayer('http://www.innovationengineering.it/d-rats-support/camminataBarro/21km.kmz');
+      
+        function toggleLayers(i) {
+        if(layers[i].getMap()==null) {
+            layers[i].setMap(map);
+          }
+          else {
+            layers[i].setMap(null);
+          }
+          document.getElementById('status').innerHTML += "toggleLayers("+i+") [setMap("+layers[i].getMap()+"] returns status: "+layers[i].getStatus()+"<br>";
+        }          
+      
+       //let's inizialize the map
        function initialize() {
 
         var initLatLng = new google.maps.LatLng({{ lat }}, {{ lng }});
         var mapOptions = {
           center: initLatLng,
           zoom: 14,
-          mapTypeId: google.maps.MapTypeId.TERRAIN
+          mapTypeId: google.maps.MapTypeId.HYBRID,
+                   
+        //  rotateControl: true,
+        // panControl: false,
+        // zoomControl: true,
+        //  mapTypeControl: true,
+        //  scaleControl: true,
+        //  streetViewControl: true,
+        //  overviewMapControl: true,
+        //  overviewMapControlOptions: {
+        //        opened: true,
+        //        position: google.maps.ControlPosition.BOTTOM_LEFT   
+        //        }
           };
+          
         map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-       //
-       // here it is possible to load a KML track file
-       //
-        var map_overlay = new google.maps.KmlLayer('http://www.innovationengineering.it/d-rats-support/resegup/resegup.kmz');
-        map_overlay.setMap(map);
-
-
-       //   marker = new google.maps.Marker({
-       //   title: "the sweeping sweep!"
-       //});
-       //
+       
+        // Create an ElevationService to use to populate the infowindow when the user clicks on the map (not on a marker)
+        elevator = new google.maps.ElevationService();
+      
+        // Add a listener for the click event and call getElevation on that location
+        google.maps.event.addListener(map, 'click', getElevation);
+        
+        function getElevation(event) {        
+          var locations = [];
+          // Retrieve the clicked location and push it on the array
+          var clickedLocation = event.latLng;
+          locations.push(clickedLocation);
+          // Create a LocationElevationRequest object using the array's one value
+          var positionalRequest = {
+            'locations': locations
+          }
+          // Initiate the location request
+          elevator.getElevationForLocations(positionalRequest, function(results, status) {
+            if (status == google.maps.ElevationStatus.OK) {
+              // Retrieve the first result
+              if (results[0]) {
+                // Open an info window indicating the elevation at the clicked position
+                infowindowUserclick.setContent('Lat: '+ (Math.round(event.latLng.lat() * 10000) / 10000) +'<br>Lng: '+ (Math.round(event.latLng.lng() * 10000) / 10000) +'<br>Quota: ' + Math.round(results[0].elevation) + ' metri.');
+                  
+                infowindowUserclick.setPosition(clickedLocation);
+                infowindowUserclick.open(map);
+              } else {
+                alert('No results found');
+              }
+            } else {
+              alert('Elevation service failed due to: ' + status);
+            }
+          });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
       }
+      
+      //this is to add the new markers over the map
       function updateMarker(data) {
         // parse data and create a new LatLng object
         var point = JSON.parse(data);
@@ -132,48 +201,42 @@ setInterval(GetClock,1000);
         
         if (point.station=="AA") {iconid=4 };
         if (point.station=="zz001") {iconid=3 };       
+        
         // differentiate icon colors upon station name
         if (point.station=="IQ2LC1") {iconid=1 };
         if (point.station=="IQ2LC2") {iconid=2 };
         if (point.station=="IQ2LC3") {iconid=3 };
         if (point.station=="IQ2LC4") {iconid=4 };
 
+        // if startion name is AA (for the gps fix generator tester) 
+        if (point.station=="AA") {iconid=1 };
+          
+        // deinisco i colori per le scope del percorso    
+        //6KM
+        if (point.station=="IZ2WSK") {iconid=1 };
+        //14KM
+        if (point.station=="IZ2WKL") {iconid=2 };
+        //21KM
+        if (point.station=="IW2OBX") {iconid=3 };
+        
+        //0KM
+        if (point.station=="IZ2LXI") {iconid=5 };
+          
 
         marker = new google.maps.Marker({
             position: new google.maps.LatLng(point.lat, point.lng),
             map: map,
             title: point.station+" -- "+point.timestamp,
-            icon : icons[iconid]
+            icon : icons[iconid],
+            animation: google.maps.Animation.DROP
              });
-
-          // markerslist.push(marker);
-
-              google.maps.event.addListener(marker, 'click', (function(marker) {
+             google.maps.event.addListener(marker, 'click', (function(marker) {
                   return function() {
                   infowindow.setContent(marker.title);
                   infowindow.open(map, marker);
-
                 }
               })(marker));
-
-
-      /*  //check if we need to create a new marker or just update an existing one
-        if (arraycontains(markerslist,point.station)==false) {
-            markerslist.push(point.station);
-            console.log(point.station);
-        }
-
-        console.log(markerslist);
-
-        curLatLng = new google.maps.LatLng(point.lat, point.lng);
-        marker.setPosition(curLatLng);
-        marker.setMap(map);
-        marker.setTitle(point.station);
-        console.log(curLatLng)
-      */
-
       console.log(markerslist);
-
       }
 
       google.maps.event.addDomListener(window, 'load', initialize);
@@ -199,14 +262,21 @@ setInterval(GetClock,1000);
     </script>
   </head>
   <body>
-    <div id="text"></div>
     <div id="map-canvas"></div>
     <div id="over_map">
       <img border=0 src="http://www.innovationengineering.it/d-rats-support/arilecco.jpg" width=101 height=101 align=left ></img>
       <center>Monitoraggio <br>realtime<hr> 
       <div id="clockbox"></div><hr></center>
-      <img border=0 src="http://www.resegup.it/wp-content/uploads/2014/12/logo@2x.png" width=200 ></img>
-     <!-- <img border=0 src="http://static.wixstatic.com/media/9cda5f_b41a1458968b446d9168eaf482851440.jpg" width="200" >-->
-    </div>
+              <img border=0 src="http://www.resegup.it/wp-content/uploads/2014/12/logo@2x.png" width=200 ></img>
+      </div>
+    <div id="text"></div>
+
+    <div id="buttons">
+      Visualizza Percorso <input type="checkbox" id="layer_01" onclick="toggleLayers(0);"/><!--
+      14Km <input type="checkbox" id="layer_02" onclick="toggleLayers(1);"/>
+      21Km <input type="checkbox" id="layer_02" onclick="toggleLayers(2); "/>    -->
+    </div> 
+
+
   </body>
 </html>
