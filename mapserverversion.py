@@ -6,7 +6,7 @@
 ##this module contains the d-rats version variables
 #latest version being 0.3.3 updated to 0.3.4 (which is the alpha for this documentation project)
 
-VERSION = "0.0.1 alpha"
+VERSION = "0.0.2"
 NAME="D-Rats Webmap server"
 DESCRIPTION="D-Rats Webmap server"
 LONG_DESCRIPTION = "an expansion for D-RATS to show GPS positions on a web page"

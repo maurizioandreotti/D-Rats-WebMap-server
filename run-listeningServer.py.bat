@@ -6,7 +6,7 @@ echo  -i : output port, where d-rats will send GPS fixes
 echo  -x : longitude
 echo  -y : latitude 
 echo  -m : name of the html map to load (located in templates folder)
-echo
+echo  -k : set to 1 to generate CSV file
 echo
 echo 
 
@@ -19,7 +19,7 @@ rem # sample
  rem python listeningServer.py -o 5010 -i 5011 -m map.html
  rem python listeningServer.py -o 5010 -i 5011 -x 9.375 -y 45.835 -m map-31maggio.html
 
- python listeningServer.py -o 5010 -i 5011 -x 9.375 -y 45.835 -m map-resegup.html
+c:\python27\python.exe listeningServer-KML.py -o 5010 -i 5011 -x 9.375 -y 45.835 -m map.html -k 1
 
 
 pause

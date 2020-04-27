@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2014 Maurizio Andreotti IZ2LXI - based on a work from Andrea Galbusera Gizero
+# Copyright 2019 Maurizio Andreotti IZ2LXI - based on a work from Andrea Galbusera Gizero
 #
 # This program is free software: you can redistribute it and/or modify
 # """module docstring"""it under the terms of the GNU General Public License as published by
@@ -128,7 +128,7 @@ def loop_fix(lat=initlat, lng=initlng):
       if x % 2 :
          lat += .0001
          lng += .0001
-         callback_gps(lat, lng, "zz001", x)
+         callback_gps(lat, lng, "IQ2LC1", x)
       else:
          lata -= .0001
          lnga -= .0001
