@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+      #wrapper { position: relative; }
+      #text { 
+          position: absolute; 
+          top: 200px; 
+          right: 6px; 
+          z-index: 100;
+          font-family: Verdana, Arial, Helvetica, sans-serif;
+          font-size: 6px;
+          font-style: normal;
+          color: red;
+          border: 0px;
+          background-color: white;
+          padding: 5px;
+          width: 210px; 
+      }    
+      #over_map { 
+          position: absolute; 
+          top: 24px; 
+          right: 6px; 
+          z-index: 99;
+          font-family: Verdana, Arial, Helvetica, sans-serif;
+          font-size: 14px;
+          font-style: normal;
+          color: red;
+          border: 0px;
+          background-color: white;
+          padding: 5px;
+          width: 210px; 
+      }
+    </style>
+
+    <script type="text/javascript">
+      // Real-time clock
+      var tday = ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"];
+      var tmonth = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Sett", "Ott", "Nov", "Dic"];
+      
+      function GetClock(){
+        var d = new Date();
+        var nday = d.getDay(), nmonth = d.getMonth(), ndate = d.getDate(), nyear = d.getFullYear(), nhour = d.getHours(), nmin = d.getMinutes(), nsec = d.getSeconds();
+        if(nmin <= 9) nmin = "0" + nmin;
+        if(nsec <= 9) nsec = "0" + nsec;
+        document.getElementById('clockbox').innerHTML = "<font size=-2>" + tday[nday] + " " + ndate + " " + tmonth[nmonth] + " " + nyear + "</font><br>" + nhour + ":" + nmin + ":" + nsec;
+      }
+
+      window.onload = function(){
+        GetClock();
+        setInterval(GetClock, 1000);
+      }
+    </script>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&key="></script>
+    <script type="text/javascript" src="/static/socket.io.js"></script>
+    <script type="text/javascript">
+
+      var iconCounter = 0;
+      var markerslist = [];
+      var infowindow = new google.maps.InfoWindow({
+        maxWidth: 160
+      });
+
+      function arraycontains(a, obj) {
+        for (var i = 0; i < a.length; i++) {
+          if (a[i] === obj) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      // Setup the different icons and shadows
+      var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+
+      var icons = [
+        iconURLPrefix + 'red-dot.png',
+        "http://www.innovationengineering.it/d-rats-support/Xgreen.png",
+        "http://www.innovationengineering.it/d-rats-support/Xorange.png",
+        "http://www.innovationengineering.it/d-rats-support/Xblue.png",
+        "http://www.innovationengineering.it/d-rats-support/Xred.png",
+        iconURLPrefix + 'green-dot.png',
+        iconURLPrefix + 'orange-dot.png',
+        iconURLPrefix + 'purple-dot.png',
+        iconURLPrefix + 'pink-dot.png',
+        iconURLPrefix + 'yellow-dot.png'
+      ];
+
+      var shadow = {
+        anchor: new google.maps.Point(15, 33),
+        url: iconURLPrefix + 'msmarker.shadow.png'
+      };
+
+      var map;
+
+      function initialize() {
+        var lat = 45.8336; // Default latitude
+        var lng = 9.2661; // Default longitude
+        var initLatLng = new google.maps.LatLng(lat, lng);
+        var mapOptions = {
+          center: initLatLng,
+          zoom: 14,
+          mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        
+        // Uncomment this to load a KML track file
+         //var map_overlay = new google.maps.KmlLayer('http://www.innovationengineering.it/d-rats-support/resegup.kmz');
+         var map_overlay = new google.maps.KmlLayer('https://drive.google.com/file/d/1jXfwMakxhYUwD2xvtm5XBRj2xaq-gJip/view?usp=drive_link');
+         map_overlay.setMap(map);
+      }
+      
+      function updateMarker(data) {
+        var point = JSON.parse(data);
+        var iconid = 0;
+        
+        if (point.station === "AA") iconid = 1;
+        if (point.station === "IQ2LC1") iconid = 1;
+        if (point.station === "IQ2LC2") iconid = 2;
+        if (point.station === "IQ2LC3") iconid = 3;
+        if (point.station === "IQ2LC4") iconid = 4;
+
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(point.lat, point.lng),
+          map: map,
+          title: point.station + " -- " + point.timestamp,
+          icon: icons[iconid],
+          shadow: shadow
+        });
+
+        google.maps.event.addListener(marker, 'click', (function(marker) {
+          return function() {
+            infowindow.setContent(marker.title);
+            infowindow.open(map, marker);
+          }
+        })(marker));
+
+        console.log(markerslist);
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+      var socket = io.connect('/stream');
+      socket.on('connect', function() {
+        console.log("socket connected");
+      });
+      socket.on('disconnect', function() {
+        console.log("socket disconnected");
+      });
+      socket.on('message', function(data) {
+        console.log("Received data: " + data);  // Debug log for received data
+        addMessage(data);
+        updateMarker(data);
+      });
+      // Connection error debugging 
+      socket.on("connect_error", function(err) {
+        console.log("connect_error message:", err.message);
+        console.log("connect_error description:", err.description);
+        console.log("connect_error context:", err.context);
+      }); 
+      // Engine connection error debugging 
+      io.engine.on("connection_error", function(err) { 
+        console.log("connection_error req:", err.req); // the request object 
+        console.log("connection_error code:", err.code); // the error code, for example 1 
+        console.log("connection_error message:", err.message); // the error message, for example "Session ID unknown" 
+        console.log("connection_error context:", err.context); // some additional error context 
+      });
+    </script>
+    <script>
+      function addMessage(text) {
+        console.log("addMessage() says: \"" + text + "\"");
+        document.getElementById('text').innerHTML = text;
+      }
+    </script>
+  </head>
+  <body>
+    <div id="text" width=300></div>
+    <div id="map-canvas"></div>
+    <div id="over_map">
+      <img border=0 src="http://www.innovationengineering.it/d-rats-support/arilecco.jpg" width=101 height=101 align=left></img>
+      <center>Monitoraggio <br>realtime<hr> 
+      <div id="clockbox"></div><hr></center>
+      <!-- logo manifestazione -->
+      LOGO HERE
+    </div>
+  </body>
+</html>

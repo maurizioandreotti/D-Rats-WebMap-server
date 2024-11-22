@@ -10,11 +10,11 @@ to use this extension:
 	
 
 this will start the listening server on 
-	port 5011 (to receive GPS positions) 
-	and port 5010 (to push positions and map directive to the internet clients)
+	port 8011 (to receive GPS positions) 
+	and port 8010 (to push positions and map directive to the internet clients)
 
 
-3) open a web browser to http://localhost:5010
+3) open a web browser to http://localhost:8010
 
 
 

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map-canvas { height: 100%; z-index: 1; }
+      #wrapper { position: relative; }
+      #text { 
+          position: absolute; 
+          top: 200px; 
+          right: 6px; 
+          z-index: 2; 
+          font-family: Verdana, Arial, Helvetica, sans-serif;
+          font-size: 6px;
+          font-style: normal;
+          color: red;
+          border: 0px;
+          background-color: white;
+          padding: 5px;
+          width: 210px; 
+      }    
+      #over_map { 
+          position: absolute; 
+          top: 24px; 
+          right: 6px; 
+          z-index: 2;
+          font-family: Verdana, Arial, Helvetica, sans-serif;
+          font-size: 14px;
+          font-style: normal;
+          color: red;
+          border: 0px;
+          background-color: white;
+          padding: 5px;
+          width: 210px; 
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script type="text/javascript" src="/static/socket.io.js"></script>
+    <script type="text/javascript">
+      var map;
+      var markerslist = [];
+      var icons = [
+        'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+        'http://www.innovationengineering.it/d-rats-support/Xgreen.png',
+        'http://www.innovationengineering.it/d-rats-support/Xorange.png',
+        'http://www.innovationengineering.it/d-rats-support/Xblue.png',
+        'http://www.innovationengineering.it/d-rats-support/Xred.png',
+        'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+        'http://maps.google.com/mapfiles/ms/icons/orange-dot.png',
+        'http://maps.google.com/mapfiles/ms/icons/purple-dot.png',
+        'http://maps.google.com/mapfiles/ms/icons/pink-dot.png',
+        'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+      ];
+
+      function initialize() {
+        var lat = 45.8336; // Default latitude
+        var lng = 9.2661; // Default longitude
+
+        map = L.map('map-canvas').setView([lat, lng], 14);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap'
+        }).addTo(map);
+      }
+
+      function updateMarker(data) {
+        var point = JSON.parse(data);
+        var iconid = 0;
+
+        if (point.station === "AA") iconid = 1;
+        if (point.station === "IQ2LC1") iconid = 1;
+        if (point.station === "IQ2LC2") iconid = 2;
+        if (point.station === "IQ2LC3") iconid = 3;
+        if (point.station === "IQ2LC4") iconid = 4;
+
+        var markerIcon = L.icon({
+          iconUrl: icons[iconid],
+          iconSize: [24, 24]
+        });
+
+        var marker = L.marker([point.lat, point.lng], { icon: markerIcon }).addTo(map)
+          .bindPopup(point.station + " -- " + point.timestamp);
+
+        console.log(markerslist);
+      }
+
+      window.onload = function() {
+        initialize();
+      };
+
+      var socket = io.connect('/stream');
+      socket.on('connect', function() {
+        console.log("socket connected");
+      });
+      socket.on('disconnect', function() {
+        console.log("socket disconnected");
+      });
+      socket.on('message', function(data) {
+        console.log("Received data: " + data);  // Debug log for received data
+        addMessage(data);
+        updateMarker(data);
+      });
+      // Connection error debugging 
+      socket.on("connect_error", function(err) {
+        console.log("connect_error message:", err.message);
+        console.log("connect_error description:", err.description);
+        console.log("connect_error context:", err.context);
+      }); 
+      // Engine connection error debugging 
+      io.engine.on("connection_error", function(err) { 
+        console.log("connection_error req:", err.req); // the request object 
+        console.log("connection_error code:", err.code); // the error code, for example 1 
+        console.log("connection_error message:", err.message); // the error message, for example "Session ID unknown" 
+        console.log("connection_error context:", err.context); // some additional error context 
+      });
+
+      function addMessage(text) {
+        console.log("addMessage() says: \"" + text + "\"");
+        document.getElementById('text').innerHTML = text;
+      }
+    </script>
+  </head>
+  <body>
+    <div id="text" width=300></div>
+    <div id="map-canvas"></div>
+    <div id="over_map">
+      <img border=0 src="http://www.innovationengineering.it/d-rats-support/arilecco.jpg" width=101 height=101 align=left></img>
+      <center>Monitoraggio <br>realtime<hr> 
+      <div id="clockbox"></div><hr></center>
+      <!-- logo manifestazione -->
+      LOGO HERE
+    </div>
+  </body>
+</html>
