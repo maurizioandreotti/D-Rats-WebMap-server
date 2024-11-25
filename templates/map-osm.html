@@ -38,6 +38,8 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
     <script type="text/javascript" src="/static/socket.io.js"></script>
     <script type="text/javascript">
       var map;
@@ -65,6 +67,8 @@
           maxZoom: 19,
           attribution: '© OpenStreetMap'
         }).addTo(map);
+
+        loadZippedGpxFile();
       }
 
       function updateMarker(data) {
@@ -87,6 +91,32 @@
 
         console.log(markerslist);
       }
+
+      function loadZippedGpxFile() {
+  var url = 'static/TracciaGPX-Resegup2024.zip'; // Using a CORS proxy
+
+  fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.arrayBuffer();
+    })
+    .then(data => JSZip.loadAsync(data))
+    .then(zip => {
+      console.log(zip.files); // Log the files to ensure the GPX file is in the ZIP
+      return zip.file("resegup2024.gpx").async("text"); // Replace 'your-file.gpx' with the GPX file name inside the ZIP
+    })
+    .then(gpxData => {
+      new L.GPX(gpxData, { async: true }).on('loaded', function(e) {
+        map.fitBounds(e.target.getBounds());
+      }).addTo(map);
+    })
+    .catch(error => {
+      console.error("Failed to load GPX file:", error);
+    });
+}
+
 
       window.onload = function() {
         initialize();

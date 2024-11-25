@@ -24,7 +24,7 @@ def mapstatus():
     <body>
     <h1>D-Rats WebMap server extender</h1>
     <ul>
-    <li>Application name: D-Rats WebMap server extender</li>
+    <li>Application name: D-Rats WebMap server extender</li> 
     <li>Version: 1.0</li>
     <li>Description: Extender for D-Rats WebMap server</li>
     <li>Authors: Unknown</li>
